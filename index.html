@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crypto Quiz - Advanced Level</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #eee;
+    margin: 0; padding: 0;
+    display: flex; justify-content: center; align-items: center;
+    height: 100vh;
+  }
+  #quiz-container {
+    background: rgba(30, 30, 40, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 0 20px #5f7aebaa;
+    max-width: 700px;
+    padding: 30px;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 10px;
+    color: #7d90ff;
+  }
+  #question {
+    font-size: 1.3rem;
+    margin: 20px 0;
+  }
+  .option {
+    background: #393c59;
+    margin: 10px 0;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .option:hover {
+    background: #5860ff;
+    transform: scale(1.05);
+  }
+  .correct {
+    background: #3cba54 !important;
+  }
+  .wrong {
+    background: #db4437 !important;
+  }
+  #score {
+    margin-top: 25px;
+    font-size: 1.2rem;
+  }
+  #next-btn {
+    margin-top: 25px;
+    background: #7d90ff;
+    border: none;
+    color: #fff;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #next-btn:hover {
+    background: #4e5edd;
+  }
+  #progress {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  #timer {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    color: #ffa500;
+  }
+</style>
+</head>
+<body>
+
+<div id="quiz-container">
+  <h1>Crypto Quiz - Advanced Level</h1>
+  <div id="question">Loading question...</div>
+  <div id="options"></div>
+  <div id="timer">Time left: 10s</div>
+  <button id="next-btn" disabled>Next</button>
+  <div id="progress"></div>
+  <div id="score"></div>
+</div>
+
+<audio id="sound-correct" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="sound-wrong" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+
+<script>
+const questions = [
+  {question: "What is the maximum supply of Bitcoin?", options: ["21 million", "50 million", "100 million", "Unlimited"], answer: "21 million"},
+  {question: "Who is the creator of Bitcoin?", options: ["Satoshi Nakamoto", "Vitalik Buterin", "Elon Musk", "Charlie Lee"], answer: "Satoshi Nakamoto"},
+  {question: "What does 'DeFi' stand for?", options: ["Decentralized Finance", "Digital Finance", "Decentralized File", "Digital File"], answer: "Decentralized Finance"},
+  {question: "Which consensus algorithm does Ethereum 2.0 use?", options: ["Proof of Stake", "Proof of Work", "Delegated Proof of Stake", "Proof of Authority"], answer: "Proof of Stake"},
+  {question: "What is a 'smart contract'?", options: ["Self-executing contract with rules", "Physical contract", "Mining agreement", "Digital wallet"], answer: "Self-executing contract with rules"},
+  {question: "What is a 'nonce' in blockchain?", options: ["A number used once in mining", "A type of wallet", "A token", "A block reward"], answer: "A number used once in mining"},
+  {question: "What is the primary programming language of Ethereum?", options: ["Solidity", "Python", "JavaScript", "Rust"], answer: "Solidity"},
+  {question: "Which crypto uses the Lightning Network?", options: ["Bitcoin", "Ethereum", "Ripple", "Litecoin"], answer: "Bitcoin"},
+  {question: "What does NFT stand for?", options: ["Non-Fungible Token", "New Fungible Token", "Non-Financial Token", "New Finance Token"], answer: "Non-Fungible Token"},
+  {question: "What is 'staking'?", options: ["Locking tokens to support network security", "Trading coins", "Mining coins", "Sending coins"], answer: "Locking tokens to support network security"},
+  {question: "Which blockchain platform uses the 'Gas' fee system?", options: ["Ethereum", "Bitcoin", "Cardano", "Polkadot"], answer: "Ethereum"},
+  {question: "What is a 'wallet' in cryptocurrency?", options: ["Tool to store private keys", "Physical wallet", "Bank account", "Mining rig"], answer: "Tool to store private keys"},
+  {question: "What is 'block time'?", options: ["Time to mine a block", "Time to transfer coins", "Time to confirm a transaction", "Time to create a wallet"], answer: "Time to mine a block"},
+  {question: "What does 'HODL' mean?", options: ["Hold on for dear life", "Sell immediately", "Buy and sell", "Trade fast"], answer: "Hold on for dear life"},
+  {question: "What is a 'fork' in blockchain?", options: ["Change in protocol rules", "New token", "New exchange", "Wallet upgrade"], answer: "Change in protocol rules"},
+  {question: "What is 'mining'?", options: ["Validating transactions", "Trading coins", "Storing coins", "Sending payments"], answer: "Validating transactions"},
+  {question: "What is the symbol for Ethereum?", options: ["ETH", "BTC", "XRP", "LTC"], answer: "ETH"},
+  {question: "What does 'ICO' stand for?", options: ["Initial Coin Offering", "International Crypto Organization", "Initial Coin Operation", "Internet Crypto Offering"], answer: "Initial Coin Offering"},
+  {question: "What is a 'token'?", options: ["Digital asset on blockchain", "Physical coin", "Wallet software", "Exchange platform"], answer: "Digital asset on blockchain"},
+  {question: "Which crypto is known as 'digital gold'?", options: ["Bitcoin", "Ethereum", "Litecoin", "Ripple"], answer: "Bitcoin"},
+  {question: "What is 'liquidity' in crypto?", options: ["Ease of buying/selling assets", "Wallet balance", "Mining speed", "Token supply"], answer: "Ease of buying/selling assets"},
+  {question: "What does 'gas' pay for in Ethereum?", options: ["Transaction fees", "Mining rewards", "Token purchase", "Wallet creation"], answer: "Transaction fees"},
+  {question: "What is a 'block' in blockchain?", options: ["Record of transactions", "Wallet address", "Mining tool", "Token"], answer: "Record of transactions"},
+  {question: "What is the main purpose of Ripple (XRP)?", options: ["Fast cross-border payments", "Smart contracts", "Mining", "NFT creation"], answer: "Fast cross-border payments"},
+  {question: "What is 'cold storage'?", options: ["Offline wallet storage", "Online exchange", "Hot wallet", "Cloud wallet"], answer: "Offline wallet storage"},
+  {question: "What does 'DeFi' aim to replace?", options: ["Traditional financial intermediaries", "Physical currency", "Banks only", "Tokens"], answer: "Traditional financial intermediaries"},
+  {question: "What is the Ethereum Virtual Machine (EVM)?", options: ["Runtime environment for smart contracts", "Mining software", "Wallet type", "Blockchain explorer"], answer: "Runtime environment for smart contracts"},
+  {question: "Which crypto introduced smart contracts?", options: ["Ethereum", "Bitcoin", "Litecoin", "Ripple"], answer: "Ethereum"},
+  {question: "What is a 'public key'?", options: ["Address to receive crypto", "Secret password", "Private key", "Mining code"], answer: "Address to receive crypto"},
+  {question: "What is a 'private key'?", options: ["Secret code to access wallet", "Public address", "Transaction ID", "Token name"], answer: "Secret code to access wallet"},
+  {question: "Which consensus mechanism does Bitcoin use?", options: ["Proof of Work", "Proof of Stake", "Delegated Proof of Stake", "Proof of Authority"], answer: "Proof of Work"},
+  {question: "What does 'ERC-20' refer to?", options: ["Ethereum token standard", "Bitcoin protocol", "Wallet type", "Mining algorithm"], answer: "Ethereum token standard"},
+  {question: "What is 'sharding' in blockchain?", options: ["Scaling technique to split database", "Token creation", "Wallet encryption", "Mining hardware"], answer: "Scaling technique to split database"},
+  {question: "What is the primary use of 'Chainlink'?", options: ["Decentralized oracles", "Mining", "Wallet", "Exchange"], answer: "Decentralized oracles"},
+  {question: "Which cryptocurrency is known for privacy features?", options: ["Monero", "Bitcoin", "Ethereum", "Litecoin"], answer: "Monero"},
+  {question: "What is a 'DAO'?", options: ["Decentralized Autonomous Organization", "Digital Asset Owner", "Data Access Operator", "Distributed Authority Office"], answer: "Decentralized Autonomous Organization"},
+  {question: "What is 'yield farming'?", options: ["Earning interest via DeFi protocols", "Mining", "Token burning", "Wallet transfer"], answer: "Earning interest via DeFi protocols"},
+  {question: "What does 'whale' mean in crypto?", options: ["Investor with large holdings", "New trader", "Token burner", "Exchange"], answer: "Investor with large holdings"},
+  {question: "What is a 'block reward'?", options: ["Crypto earned by miners", "Transaction fee", "Wallet balance", "Token supply"], answer: "Crypto earned by miners"},
+  {question: "What is 'market cap' in crypto?", options: ["Total coin value in circulation", "Mining speed", "Wallet balance", "Token price"], answer: "Total coin value in circulation"},
+  {question: "Which coin uses the symbol 'LTC'?", options: ["Litecoin", "Bitcoin", "Ethereum", "Ripple"], answer: "Litecoin"},
+  {question: "What is 'FOMO'?", options: ["Fear of Missing Out", "Fast Order Mining Option", "Financial Market Operation", "Fork of Market Order"], answer: "Fear of Missing Out"},
+  {question: "What is a 'hard fork'?", options: ["Permanent blockchain split", "Temporary update", "Wallet upgrade", "Mining tool"], answer: "Permanent blockchain split"},
+  {question: "What is 'token burning'?", options: ["Permanent removal of tokens", "Mining tokens", "Trading tokens", "Creating tokens"], answer: "Permanent removal of tokens"},
+  {question: "What does 'KYC' stand for?", options: ["Know Your Customer", "Keep Your Coins", "Key Yield Control", "Know Your Crypto"], answer: "Know Your Customer"},
+  {question: "Which crypto platform is known for NFTs?", options: ["Ethereum", "Bitcoin", "Litecoin", "Ripple"], answer: "Ethereum"},
+  {question: "What is the main function of a 'block explorer'?", options: ["View blockchain transactions", "Wallet software", "Mining tool", "Token generator"], answer: "View blockchain transactions"},
+  {question: "What is 'Liquidity Pool'?", options: ["Pool of tokens to facilitate trading", "Mining pool", "Wallet group", "Token fund"], answer: "Pool of tokens to facilitate trading"},
+  {question: "What is a 'smart wallet'?", options: ["Wallet with automated functions", "Physical wallet", "Cold storage", "Exchange"], answer: "Wallet with automated functions"},
+  {question: "What is the unit of measurement for Bitcoin?", options: ["Satoshi", "Ether", "Litoshi", "Gwei"], answer: "Satoshi"},
+  {question: "Which crypto project focuses on interoperability?", options: ["Polkadot", "Bitcoin", "Ethereum", "Litecoin"], answer: "Polkadot"},
+  {question: "What is 'impermanent loss'?", options: ["Temporary loss in liquidity pools", "Wallet loss", "Mining loss", "Token theft"], answer: "Temporary loss in liquidity pools"}
+];
+
+function shuffleArray(array) {
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+let currentQuestionIndex = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+let unansweredQuestions = [];
+
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const nextBtn = document.getElementById('next-btn');
+const scoreEl = document.getElementById('score');
+const progressEl = document.getElementById('progress');
+const timerEl = document.getElementById('timer');
+
+const soundCorrect = document.getElementById('sound-correct');
+const soundWrong = document.getElementById('sound-wrong');
+
+function startTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  timerEl.textContent = `Time left: ${timeLeft}s`;
+  timer = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = `Time left: ${timeLeft}s`;
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      // سجل السؤال كغير مجاب
+      unansweredQuestions.push(currentQuestionIndex);
+      disableOptions();
+      scoreEl.textContent = `Time's up! Score: ${score}`;
+      nextBtn.disabled = false;
+    }
+  }, 1000);
+}
+
+function disableOptions(){
+  Array.from(optionsEl.children).forEach(btn => btn.disabled = true);
+}
+
+function showQuestion() {
+  nextBtn.disabled = true;
+  optionsEl.innerHTML = '';
+  scoreEl.textContent = '';
+  progressEl.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+  const q = questions[currentQuestionIndex];
+  questionEl.textContent = q.question;
+
+  const shuffledOptions = [...q.options];
+  shuffleArray(shuffledOptions);
+
+  shuffledOptions.forEach(option => {
+    const button = document.createElement('button');
+    button.className = 'option';
+    button.textContent = option;
+    button.onclick = () => selectAnswer(button, q.answer);
+    optionsEl.appendChild(button);
+  });
+  startTimer();
+}
+
+function selectAnswer(button, correctAnswer) {
+  clearInterval(timer);
+  disableOptions();
+
+  if(button.textContent === correctAnswer){
+    button.classList.add('correct');
+    score++;
+    soundCorrect.play();
+    scoreEl.textContent = `Correct! Score: ${score}`;
+  } else {
+    button.classList.add('wrong');
+    soundWrong.play();
+    scoreEl.textContent = `Wrong! Score: ${score}`;
+    Array.from(optionsEl.children).forEach(btn => {
+      if(btn.textContent === correctAnswer) btn.classList.add('correct');
+    });
+  }
+  nextBtn.disabled = false;
+}
+
+nextBtn.addEventListener('click', () => {
+  currentQuestionIndex++;
+  // إذا انتهينا من الأسئلة الأصلية وبه أسئلة غير مجابة
+  if(currentQuestionIndex >= questions.length && unansweredQuestions.length > 0){
+    // إعادة ترتيب أسئلة لم تتم الإجابة عليها فقط
+    const leftover = unansweredQuestions.slice();
+    unansweredQuestions = [];
+    // إعادة الأسئلة لم يتم الإجابة عليها إلى قائمة الأسئلة المؤقتة فقط
+    const questionsLeft = leftover.map(i => questions[i]);
+    // نغير مجموعة الأسئلة إلى هذه المؤقتة
+    questions.splice(0, questions.length, ...questionsLeft);
+    currentQuestionIndex = 0;
+  }
+
+  if(currentQuestionIndex < questions.length){
+    showQuestion();
+  } else {
+    showFinalScore();
+  }
+});
+
+function showFinalScore() {
+  questionEl.textContent = `Quiz Completed! Your final score is ${score} / ${questions.length + unansweredQuestions.length}`;
+  optionsEl.innerHTML = '';
+  nextBtn.style.display = 'none';
+  timerEl.textContent = '';
+  progressEl.textContent = '';
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
