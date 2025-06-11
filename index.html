@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة تحزير الكريبتو - Crypto Quiz Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container">
+        <div id="language-selection">
+            <lottie-player src="lottie/monkey.json" background="transparent" speed="1" style="width: 250px; height: 250px; margin: 0 auto;" loop autoplay></lottie-player>
+            <h2>اختر اللغة - Choose Language</h2>
+            <button onclick="startGame('ar')">العربية</button>
+            <button onclick="startGame('en')">English</button>
+        </div>
+        <div id="game" style="display: none;">
+            <lottie-player src="lottie/monkey.json" background="transparent" speed="1" style="width: 120px; height: 120px; position: absolute; top: 20px; left: 20px;"></lottie-player>
+            <h1 id="title">لعبة تحزير الكريبتو</h1>
+            <div id="score">النقاط: <span id="score-value">0</span> | أعلى نقاط: <span id="high-score">0</span></div>
+            <div id="progress">السؤال <span id="current-question">1</span> من 100</div>
+            <div id="timer">الوقت المتبقي: <span id="time">10</span> ث</div>
+            <div id="question"></div>
+            <div id="options"></div>
+            <button id="next-btn" disabled>السؤال التالي</button>
+            <div id="result"></div>
+            <button id="mute-btn">كتم الصوت</button>
+            <button id="restart-btn" style="display: none;">إعادة اللعب</button>
+        </div>
+    </div>
+    <audio id="correct-sound" src="sounds/correct.mp3"></audio>
+    <audio id="wrong-sound" src="sounds/wrong.mp3"></audio>
+    <audio id="background-music" src="sounds/background.mp3" loop></audio>
+    <script src="script.js"></script>
+</body>
+</html>
