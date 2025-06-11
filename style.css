@@ -1,0 +1,193 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background: url('images/monkey-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(25px);
+    padding: 50px;
+    border-radius: 30px;
+    box-shadow: 0 12px 60px rgba(0, 0, 0, 0.5);
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    border: 4px solid #ffd700;
+    animation: fadeIn 1.2s ease-in;
+}
+
+h1, h2 {
+    font-size: 3.5rem;
+    margin-bottom: 30px;
+    color: #ffd700;
+    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+    animation: slideIn 1.2s ease-in;
+}
+
+#score, #timer, #progress {
+    font-size: 1.5rem;
+    margin: 20px 0;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+}
+
+#question {
+    font-size: 2rem;
+    margin: 35px 0;
+    color: #fff;
+    line-height: 1.7;
+    animation: fadeIn 0.6s ease-in;
+}
+
+.option {
+    background: linear-gradient(135deg, #28a745, #218838);
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: transform 0.4s, background 0.4s, box-shadow 0.4s;
+    font-size: 1.4rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.option:hover {
+    transform: translateY(-7px);
+    background: linear-gradient(135deg, #218838, #1e7e34);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.option.correct {
+    background: linear-gradient(135deg, #28a745, #28a745);
+    animation: correct 0.7s;
+    box-shadow: 0 0 25px #28a745;
+}
+
+.option.wrong {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    animation: wrong 0.7s;
+    box-shadow: 0 0 25px #dc3545;
+}
+
+#next-btn, #mute-btn, #restart-btn, #language-selection button {
+    background: linear-gradient(135deg, #ffd700, #ffca28);
+    color: #1e3c72;
+    padding: 18px 35px;
+    border: none;
+    border-radius: 18px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin: 15px;
+    transition: background 0.4s, transform 0.3s, box-shadow 0.4s;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+#next-btn:hover, #mute-btn:hover, #restart-btn:hover, #language-selection button:hover {
+    background: linear-gradient(135deg, #ffca28, #ffb300);
+    transform: scale(1.07);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+#next-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+#mute-btn.muted {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+#result {
+    margin-top: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    animation: fadeIn 0.6s ease-in;
+}
+
+#language-selection {
+    text-align: center;
+    animation: slideIn 1.2s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-70px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes correct {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+
+@keyframes wrong {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-20px); }
+    50% { transform: translateX(20px); }
+    75% { transform: translateX(-20px); }
+    100% { transform: translateX(0); }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 30px;
+        margin: 15px;
+    }
+
+    h1, h2 {
+        font-size: 2.5rem;
+    }
+
+    #question {
+        font-size: 1.5rem;
+    }
+
+    .option {
+        padding: 15px;
+        font-size: 1.2rem;
+    }
+
+    #next-btn, #mute-btn, #restart-btn, #language-selection button {
+        padding: 15px 30px;
+        font-size: 1.3rem;
+    }
+
+    lottie-player {
+        width: 180px !important;
+        height: 180px !important;
+    }
+}
